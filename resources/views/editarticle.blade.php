@@ -17,8 +17,12 @@
     <label for="content">body</label>
     <input type="text" name="body"  value="{{$article_to_update->body}}">
 
-    <label for="content">type</label>
-    <input type="text" name="type"  value="{{$article_to_update->type}}">
+    <label for="content">category_id</label>
+    <select name="category_id">
+        @foreach ($categories as $c)
+            <option {{($c['id'] == $article_to_update->category_id) ? "selected" : null}}>{{$c['name']}}</option>
+        @endforeach
+    </select>
 
     <input type="submit" value="send">
     </form>

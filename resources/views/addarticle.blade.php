@@ -26,8 +26,12 @@
     <label for="content">body</label>
     <input type="text" name="body">
 
-    <label for="content">type</label>
-    <input type="text" name="type">
+    <label for="content">category_id</label>
+    <select name="category_id">
+        @foreach ($categories as $c)
+            <option>{{$c['name']}}</option>
+        @endforeach
+    </select>
 
     <input type="submit" value="send">
     </form>

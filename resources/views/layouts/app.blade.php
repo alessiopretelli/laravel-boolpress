@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', 'the news')</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -25,7 +25,8 @@
             <div class="container">
                 <h1><a href="/"> The News</a></h1>
                 <ul>
-                    <li><a href="{{ route('articles.index') }}">News</a></li>
+                    <li><a href="{{ route('articles.index') }}">All the News</a></li>
+                    <li><a href="/categories">Categories</a></li>
                     <li><a href="/contacts">Contacts</a></li>
                 </ul>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Category;
 use App\Article;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -14,7 +16,7 @@ class ArticleController extends Controller
             'title' => 'required|max:250',
             'intro' => 'required|max:250',
             'body' => 'required',
-            'type' => 'required|max:50',
+            'category_id' => 'required',
         ]);
     }
 
@@ -25,9 +27,20 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        $stuff = [
+            'articles' => Article::all(),
+            'name' => 'all the news'
+        ];
+        // metodo spartano per reperire nome, il nome viene inserito nell'array names alla posizione corrispondente dell'id
+        // $names = [];
+        // foreach ($articles as $a) {
+        //     $id = $a['user_id'];
+        //     $names[$id] = User::find($id)['name'];
+        // }
+
+        // @dd($names);
          
-        return view('news', compact('articles'));
+        return view('news', $stuff);
     }
 
     /**
@@ -39,7 +52,8 @@ class ArticleController extends Controller
     {
 
         if (Auth::check()) {
-            return view('addarticle');
+            $categories = Category::all();
+            return view('addarticle', compact('categories'));
         } else {
             return $this->index();
         }
@@ -56,7 +70,9 @@ class ArticleController extends Controller
     {
         if (Auth::check()) {
             $data = $request->all();
-
+            $data['user_id'] = Auth::user()->id;
+            $data['category_id'] = Category::where('name', $data['category_id'])->first()['id'];
+            // @dd($data);
             $this->valida($request);
     
             $new_article = new Article;
@@ -78,9 +94,12 @@ class ArticleController extends Controller
      * @param  \App\article  $article
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($title)
     {
-        $article = Article::find($id);
+        // @dd($title);
+        $article = Article::where('title', $title)->first();
+
+        // @dd($article);
 
         return view('details', compact('article'));
     }
@@ -91,13 +110,15 @@ class ArticleController extends Controller
      * @param  \App\article  $article
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($title)
     {
 
         if (Auth::check()) {
-            $article_to_update = Article::findOrFail($id);
+            $categories = Category::all();
+            $article_to_update = Article::where('title', $title)->first();
+            // @dd($article_to_update);
 
-            return view('editarticle', compact('article_to_update'));
+            return view('editarticle', compact('article_to_update', 'categories'));
         } else {
             return $this->index();
         }
@@ -116,6 +137,8 @@ class ArticleController extends Controller
 
         if (Auth::check()) {
             $data = $request->all();
+            $data['category_id'] = Category::where('name', $data['category_id'])->first()['id'];
+            // @dd($data);
             $article->update($data);
     
             return redirect()->route('articles.index');

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// toglie errore->
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +16,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'HomeController@index');
+// Route::get('/articles', 'ArticleController@index')->name('articles.index');
 
 Route::get('/contacts', function() {
     return view('contacts');
 });
 
 Route::resource('articles', 'ArticleController');
+
+Route::get('/categories', 'CategoryController@index');
+Route::get('/categories/{name}', 'CategoryController@show_articles')->name('category_selected');
+
+// per rimuovere il register, inserire register in routes con false es.-> Auth::routes(['register' => false]);
 
 Auth::routes();
 

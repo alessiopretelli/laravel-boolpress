@@ -12,6 +12,7 @@
         </div>
         <div class="info_news">
             <p>Date: {{$article['created_at']}}</p>
+            <p>Author: {{$article->user->name}}</p>
         </div>
     </div>
 

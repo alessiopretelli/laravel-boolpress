@@ -4,10 +4,10 @@
 
 @section('content')
  
-<ul>
+<div class="categories">
 @foreach ($categories as $c)
     <a href="{{route('category_selected', ['name' => $c['name']])}}"><li>{{$c['name']}}</li></a>
 @endforeach
-</ul>
+</div>
 
 @endsection

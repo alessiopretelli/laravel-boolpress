@@ -24,6 +24,12 @@
         @endforeach
     </select>
 
+    <p>Seleziona i tag:</p>
+    @foreach ($tags as $tag)
+        <input name="tags[]"  type="checkbox" value="{{$tag->id}}" {{$article_to_update->tags->contains($tag) ? 'checked=checked' : ''}}>
+        <label>{{$tag->name}}</label>
+    @endforeach
+
     <input type="submit" value="send">
     </form>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tag;
 use App\User;
 use App\Category;
 use App\Article;
@@ -52,8 +53,9 @@ class ArticleController extends Controller
     {
 
         if (Auth::check()) {
+            $tags = Tag::all();
             $categories = Category::all();
-            return view('addarticle', compact('categories'));
+            return view('addarticle', compact('categories', 'tags'));
         } else {
             return $this->index();
         }
@@ -70,6 +72,9 @@ class ArticleController extends Controller
     {
         if (Auth::check()) {
             $data = $request->all();
+            // @dd($data['tags']);
+
+
             $data['user_id'] = Auth::user()->id;
             $data['category_id'] = Category::where('name', $data['category_id'])->first()['id'];
             // @dd($data);
@@ -78,8 +83,11 @@ class ArticleController extends Controller
             $new_article = new Article;
     
             $new_article->fill($data);
-    
+            // @dd($new_article);
+            // prima salvare l'articolo e poi fare la sincronizzazione...
             $new_article->save();
+
+            $new_article->tags()->sync($data['tags']);
     
             return redirect()->route('articles.index');
         } else {
@@ -115,10 +123,12 @@ class ArticleController extends Controller
 
         if (Auth::check()) {
             $categories = Category::all();
+            $tags = Tag::all();
+
             $article_to_update = Article::where('title', $title)->first();
             // @dd($article_to_update);
 
-            return view('editarticle', compact('article_to_update', 'categories'));
+            return view('editarticle', compact('article_to_update', 'categories', 'tags'));
         } else {
             return $this->index();
         }
@@ -140,6 +150,12 @@ class ArticleController extends Controller
             $data['category_id'] = Category::where('name', $data['category_id'])->first()['id'];
             // @dd($data);
             $article->update($data);
+
+            if (array_key_exists('tags', $data)) {
+                $article->tags()->sync($data['tags']);
+            } else {
+                $article->tags()->sync([]);
+            }
     
             return redirect()->route('articles.index');
         } else {
@@ -158,6 +174,7 @@ class ArticleController extends Controller
     {
 
         if (Auth::check()) {
+            $article->tags()->sync([]);
             $article->delete();
             return redirect()->route('articles.index')->with('status', 'Article deleted!');
         } else {

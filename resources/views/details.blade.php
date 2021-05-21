@@ -12,6 +12,9 @@
         </div>
         <div class="info_news">
             <p>Date: {{$article['created_at']}}</p>
+            @if ($article['updated_at'])
+            <p>Updated at: {{$article['updated_at']}}</p>
+            @endif
             <p>Author: {{$article->user->name}}</p>
         </div>
     </div>

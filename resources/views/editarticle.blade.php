@@ -4,7 +4,7 @@
 
 @section('content')
 
-<form action="{{route('articles.update', ['article' => $article_to_update['id']])}}" method="post">
+    <form action="{{route('articles.update', ['article' => $article_to_update['id']])}}" method="post">
     @csrf
     @method('PUT')
 

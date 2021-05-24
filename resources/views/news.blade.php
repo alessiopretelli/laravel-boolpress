@@ -36,15 +36,17 @@
                 </div>
                 @guest
                 @else
-                <div class="settings">
-                    <a href="{{route('articles.edit', ['article' => $article->title])}}">edit</a>
-                    <form class='form_delete' action="{{ route('articles.destroy', ['article' => $article['id']]) }}" method="post">
-                        @csrf
-                        @method("DELETE")
+                    @if ($article->user->name == Auth::user()->name) 
+                        <div class="settings">
+                            <a href="{{route('articles.edit', ['article' => $article->title])}}">edit</a>
+                            <form class='form_delete' action="{{ route('articles.destroy', ['article' => $article['id']]) }}" method="post">
+                                @csrf
+                                @method("DELETE")
 
-                        <button class="delete" type='submit'>delete</button>
-                    </form>       
-                </div>
+                                <button class="delete" type='submit'>delete</button>
+                            </form>       
+                        </div>
+                    @endif
                 @endguest
             </div>
         </a>
